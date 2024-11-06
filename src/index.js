@@ -12,26 +12,42 @@ async function runClockIn() {
   const page = await browser.newPage();
   await page.goto(process.env.LOGIN_URL);
 
-  await page.evaluate(() => {
-    localStorage.setItem("terms@lastVerify", new Date().toISOString());
-  });
+  const goToSignInButton = await page.waitForSelector(
+    "button.MuiButton-root .MuiButton-label"
+  );
+  await goToSignInButton.click();
 
-  const loginInput = await page.waitForSelector('#login input#matricula');
+  const loginInput = await page.waitForSelector(
+    "input#outlined-basic-account.MuiInputBase-input.MuiOutlinedInput-input"
+  );
   await loginInput.type(process.env.USER_LOGIN);
 
-  const passwordInput = await page.waitForSelector('[placeholder="Senha"]');
+  const passwordInput = await page.waitForSelector(
+    "input#outlined-basic-password.MuiInputBase-input.MuiOutlinedInput-input.MuiInputBase-inputAdornedEnd.MuiOutlinedInput-inputAdornedEnd"
+  );
   await passwordInput.type(process.env.USER_PASSWORD);
 
-  await page.click('#boxLogin button.btn.btn-primary.pull-right');
+  const signInButton = await page.waitForSelector(
+    "button.MuiButtonBase-root.MuiButton-root.MuiButton-text.jss101"
+  );
+  await signInButton.click();
 
-  // await page.waitForSelector('li p[aria-label="Menu Attendance"]');
-  // await page.goto(process.env.CLOCK_IN_URL);
+  const clockInButton = await page.waitForSelector(
+    "button.MuiButtonBase-root.MuiButton-root.MuiButton-text.jss100"
+  );
+  await clockInButton.click();
+}
 
-  // const swipeButton = await page.waitForSelector("#div-swipeButtonText");
-  // await swipeButton.click({ clickCount: 2 });
-
-  // await page.waitForSelector("#div-swipeButtonOperationSuccessText");
-  // await browser.close()
+// TODO - MyAhgora - Implement bot to check missing hours and fix them.
+async function getMissingHours() {
+  console.log("Feature coming...");
+  // await page.evaluate(() => {
+  //   localStorage.setItem("terms@lastVerify", new Date().toISOString());
+  // });
+  // const loginInput = await page.waitForSelector('#login input#matricula');
+  // await loginInput.type(process.env.USER_LOGIN);
+  // const passwordInput = await page.waitForSelector('[placeholder="Senha"]');
+  // await passwordInput.type(process.env.USER_PASSWORD);
 }
 
 const timeToSchedule = argv && argv.length > 2 && argv[2].split(":");
